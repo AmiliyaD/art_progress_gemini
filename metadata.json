@@ -1,0 +1,6 @@
+{
+  "name": "ART//PROGRESS",
+  "description": "Personal art practice studio, progress tracker, challenge manager, artwork archive, and learning journal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
