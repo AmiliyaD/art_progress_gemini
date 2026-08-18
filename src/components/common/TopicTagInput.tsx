@@ -104,7 +104,7 @@ export const TopicTagInput: React.FC<TopicTagInputProps> = ({
       {/* Suggested Quick Pick Chips */}
       <div className="space-y-1.5 pt-1">
         <span className="text-[11px] font-medium text-zinc-400">Suggested:</span>
-        <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1">
+        <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto overflow-x-hidden pr-1">
           {suggestedList.map(topic => {
             const isSelected = selectedTopics.includes(topic);
             return (

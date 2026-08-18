@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   X,
@@ -38,6 +39,28 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({
     ? sessions.find(s => s.id === artwork.sourceSessionId)
     : null;
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (artwork) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [artwork]);
+
+  // Handle escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && artwork && !isDeleteConfirmOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [artwork, isDeleteConfirmOpen, onClose]);
+
   useEffect(() => {
     if (artwork) {
       getArtworkImageUrl(artwork.imageId).then(url => {
@@ -48,27 +71,37 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({
     }
   }, [artwork]);
 
-  return (
+  const modalContent = (
     <AnimatePresence>
       {artwork && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <motion.div
+          key="artwork-detail-modal-container"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 min-h-screen overflow-y-auto"
+        >
           <motion.div
+            key="artwork-detail-modal-overlay"
             id="artwork-detail-modal-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            className="fixed inset-0 bg-black/85 backdrop-blur-md"
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 bg-black/85 backdrop-blur-md cursor-pointer"
             onClick={onClose}
           />
 
           <motion.div
+            key="artwork-detail-modal-box"
             id="artwork-detail-modal"
-            initial={{ opacity: 0, scale: 0.95, y: 12 }}
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 12 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-10 w-full max-w-4xl bg-[#14151a] border border-[#2c2f38] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]"
+            exit={{ opacity: 0, scale: 0.97, y: 6 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className="relative z-10 w-full max-w-4xl bg-[#14151a] border border-[#2c2f38] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh] my-auto text-left"
+            onClick={e => e.stopPropagation()}
           >
             {/* Large Image Preview Left */}
             <div className="w-full md:w-3/5 bg-[#08090b] flex items-center justify-center p-4 relative min-h-[300px] overflow-hidden">
@@ -244,8 +277,11 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({
             }}
             onCancel={() => setIsDeleteConfirmOpen(false)}
           />
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );
+
+  if (typeof document === 'undefined') return null;
+  return createPortal(modalContent, document.body);
 };

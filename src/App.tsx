@@ -68,11 +68,12 @@ const StudioMainContent: React.FC = () => {
         <main className="flex-1 pb-16 overflow-y-auto relative">
           <motion.div
             key={currentTab}
-            initial={{ opacity: 0, y: 10, scale: 0.99 }}
+            initial={{ opacity: 0, y: 16, scale: 0.988 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{
-              duration: 0.36,
-              ease: [0.22, 1, 0.36, 1]
+              duration: 0.52,
+              delay: 0.05,
+              ease: [0.16, 1, 0.3, 1]
             }}
             className="w-full will-change-transform"
           >

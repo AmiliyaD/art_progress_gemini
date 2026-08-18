@@ -91,10 +91,10 @@ export const NewSessionModal: React.FC = () => {
               y: { duration: 0.34, ease: [0.22, 1, 0.36, 1] },
               layout: { duration: 0.36, ease: [0.22, 1, 0.36, 1] }
             }}
-            className="relative z-10 w-full max-w-lg bg-[#181a1f] border border-[#2c2f38] rounded-2xl p-6 shadow-2xl shadow-black/60 flex flex-col max-h-[90vh] overflow-y-auto"
+            className="relative z-10 w-full max-w-md bg-[#181a1f] border border-[#2c2f38] rounded-2xl p-6 shadow-2xl shadow-black/60 flex flex-col max-h-[90vh] overflow-y-auto overflow-x-hidden"
           >
             {/* Ambient Accent Glow (Decorative - pointer-events-none) */}
-            <div className="absolute top-0 right-0 -mr-16 -mt-16 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
 
             <div className="flex items-center justify-between pb-4 border-b border-[#242730] relative z-10">
               <div>
@@ -223,15 +223,15 @@ export const NewSessionModal: React.FC = () => {
                     </div>
 
                     {/* Presets Grid */}
-                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5">
+                    <div className="grid grid-cols-3 sm:grid-cols-3 gap-1.5">
                       {DURATION_PRESETS.map(preset => {
                         const isSelected = selectedMinutes === preset.minutes;
                         return (
                           <motion.button
                             key={preset.minutes}
                             type="button"
-                            whileHover={{ scale: 1.04, y: -1 }}
-                            whileTap={{ scale: 0.96 }}
+                            whileHover={{ scale: 1.03, y: -1 }}
+                            whileTap={{ scale: 0.97 }}
                             transition={{ type: "spring", stiffness: 450, damping: 25 }}
                             onClick={() => handleSelectPreset(preset.minutes)}
                             className={`relative py-2 px-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer select-none text-center ${
@@ -247,7 +247,7 @@ export const NewSessionModal: React.FC = () => {
                     </div>
 
                     {/* Custom Input */}
-                    <div className="flex items-center gap-2.5 pt-1.5 border-t border-[#22242c]">
+                    <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[#22242c]">
                       <span className="text-xs text-zinc-400 font-medium shrink-0">Custom (min):</span>
                       <input
                         type="number"
@@ -255,10 +255,10 @@ export const NewSessionModal: React.FC = () => {
                         max="720"
                         value={customMinutesInput}
                         onChange={e => handleCustomMinutesChange(e.target.value)}
-                        className="w-24 px-2.5 py-1.5 rounded-lg bg-[#181a20] border border-[#2c2f38] text-xs font-mono font-bold text-amber-300 focus:border-amber-500 focus:outline-none transition-colors"
+                        className="w-20 px-2.5 py-1.5 rounded-lg bg-[#181a20] border border-[#2c2f38] text-xs font-mono font-bold text-amber-300 focus:border-amber-500 focus:outline-none transition-colors"
                       />
                       <span className="text-[11px] text-zinc-400 italic">
-                        Strict countdown — session automatically completes at 00:00.
+                        Strict countdown limit
                       </span>
                     </div>
                   </motion.div>

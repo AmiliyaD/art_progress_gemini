@@ -63,7 +63,7 @@ export const FinishSessionModal: React.FC = () => {
             className="relative z-10 w-full max-w-md bg-[#181a1f] border border-[#2c2f38] rounded-2xl p-6 md:p-7 shadow-2xl shadow-black/80 overflow-hidden"
           >
             {/* Ambient Accent Glow (Decorative - pointer-events-none) */}
-            <div className="absolute top-0 right-0 -mr-16 -mt-16 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
 
             <div className="flex items-start justify-between mb-4 relative z-10">
               <div className="flex items-center gap-3">

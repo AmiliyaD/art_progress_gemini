@@ -55,9 +55,9 @@ export const ChallengesView: React.FC = () => {
     <div id="challenges-view-page" className="p-8 max-w-7xl mx-auto space-y-8">
       {/* Top Header */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#22242a]"
       >
         <div>
@@ -87,9 +87,9 @@ export const ChallengesView: React.FC = () => {
 
       {/* Filter Tabs & Search */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col sm:flex-row items-center justify-between gap-4"
       >
         {/* Status Tabs */}
@@ -137,9 +137,9 @@ export const ChallengesView: React.FC = () => {
         />
       ) : (
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.28, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.48, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {filteredChallenges.map(challenge => (

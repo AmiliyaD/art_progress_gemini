@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, BookOpen, Tag, Link as LinkIcon } from 'lucide-react';
 import { Insight } from '../../types';
@@ -25,6 +26,28 @@ export const InsightModal: React.FC<InsightModalProps> = ({
   const [relatedArtworkId, setRelatedArtworkId] = useState<string>('');
   const [relatedChallengeId, setRelatedChallengeId] = useState<string>('');
   const [relatedSessionId, setRelatedSessionId] = useState<string>('');
+
+  // Lock background scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
+  // Handle escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (initialData) {
@@ -71,31 +94,50 @@ export const InsightModal: React.FC<InsightModalProps> = ({
     onClose();
   };
 
-  return (
+  const modalContent = (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <motion.div
+          key="insight-modal-container"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 min-h-screen overflow-y-auto"
+        >
+          {/* Backdrop with smooth fade & blur */}
           <motion.div
+            key="insight-modal-overlay"
             id="insight-modal-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md"
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md cursor-pointer"
             onClick={onClose}
           />
 
+          {/* Modal Card */}
           <motion.div
+            key="insight-modal-box"
             id="insight-modal"
-            initial={{ opacity: 0, scale: 0.95, y: 12 }}
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 12 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-10 w-full max-w-xl bg-[#181a1f] border border-[#2c2f38] rounded-2xl p-6 shadow-2xl flex flex-col max-h-[90vh] overflow-y-auto"
+            exit={{ opacity: 0, scale: 0.97, y: 6 }}
+            transition={{
+              duration: 0.28,
+              ease: [0.16, 1, 0.3, 1]
+            }}
+            className="relative z-10 w-full max-w-xl bg-[#181a1f] border border-[#2c2f38] rounded-2xl p-6 md:p-7 shadow-2xl shadow-black/80 my-auto text-left flex flex-col max-h-[90vh] overflow-y-auto overflow-x-hidden"
+            onClick={e => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between pb-4 border-b border-[#242730]">
+            {/* Ambient Accent Glow */}
+            <div className="absolute top-0 right-0 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+
+            <div className="flex items-center justify-between pb-4 border-b border-[#242730] relative z-10">
               <div>
-                <span className="text-[11px] font-bold tracking-wider text-amber-500 uppercase">
+                <span className="text-[11px] font-bold tracking-wider text-amber-500 uppercase flex items-center gap-1">
+                  <BookOpen className="w-3 h-3" />
                   Learning Journal
                 </span>
                 <h2 className="text-lg font-bold text-zinc-100">
@@ -103,14 +145,16 @@ export const InsightModal: React.FC<InsightModalProps> = ({
                 </h2>
               </div>
               <button
+                type="button"
                 onClick={onClose}
-                className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-[#22242a] transition-colors cursor-pointer"
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-[#22242a] focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-colors cursor-pointer"
+                title="Close"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+            <form onSubmit={handleSubmit} className="mt-4 space-y-4 relative z-10">
               {/* Title */}
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
@@ -227,8 +271,12 @@ export const InsightModal: React.FC<InsightModalProps> = ({
               </div>
             </form>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );
+
+  if (typeof document === 'undefined') return null;
+  return createPortal(modalContent, document.body);
 };
+

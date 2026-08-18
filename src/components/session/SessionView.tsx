@@ -74,18 +74,18 @@ export const SessionView: React.FC = () => {
       {activeSession ? (
         <motion.section
           id="active-session-section"
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.48, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
         >
           <ActiveSessionCard />
         </motion.section>
       ) : (
         <motion.section
           id="no-active-session-banner"
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.48, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
           className="p-8 rounded-2xl bg-[#14151a] hover:border-zinc-700/60 border border-[#22242a] flex flex-col md:flex-row items-center justify-between gap-6 transition-colors shadow-lg shadow-black/20"
         >
           <div className="space-y-1 text-center md:text-left">
@@ -116,9 +116,9 @@ export const SessionView: React.FC = () => {
       {/* Session History Header & Filters */}
       <motion.section
         id="session-history-section"
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, delay: 0.06, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.10, ease: [0.16, 1, 0.3, 1] }}
         className="space-y-4"
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#22242a]">

@@ -74,9 +74,9 @@ export const DashboardView: React.FC = () => {
       {/* 0. PERSONALIZED GREETING BANNER */}
       <motion.section
         id="dashboard-greeting-banner"
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#22242a]"
       >
         <div className="space-y-1">
@@ -116,9 +116,9 @@ export const DashboardView: React.FC = () => {
       {/* 1. CURRENT SESSION SECTION */}
       <motion.section
         id="dashboard-session-section"
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
       >
         {activeSession ? (
           <ActiveSessionCard />
@@ -156,9 +156,9 @@ export const DashboardView: React.FC = () => {
       {/* 2. REAL METRIC TILES */}
       <motion.section
         id="dashboard-metrics-grid"
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
         className="grid grid-cols-2 md:grid-cols-4 gap-4"
       >
         {/* Total Drawing Time */}
@@ -238,18 +238,18 @@ export const DashboardView: React.FC = () => {
       {/* 3. ACTIVITY GRAPH TIMELINE */}
       <motion.section
         id="dashboard-activity-section"
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
       >
         <ActivityGraph sessions={sessions} />
       </motion.section>
 
       {/* 4. ACTIVE CHALLENGES & RECENT ACHIEVEMENTS ROW */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.20, ease: [0.16, 1, 0.3, 1] }}
         className="grid grid-cols-1 lg:grid-cols-3 gap-8"
       >
         {/* Active Challenges (2 cols) */}
@@ -353,9 +353,9 @@ export const DashboardView: React.FC = () => {
 
       {/* 5. RECENT ARTWORK & LATEST INSIGHT ROW */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, delay: 0.20, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
         className="grid grid-cols-1 lg:grid-cols-3 gap-8"
       >
         {/* Recent Artwork (2 cols) */}

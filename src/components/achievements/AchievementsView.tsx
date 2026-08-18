@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { motion } from 'motion/react';
 import {
   Award,
   Trophy,
@@ -86,9 +87,14 @@ export const AchievementsView: React.FC = () => {
   };
 
   return (
-    <div id="achievements-view-page" className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-200">
+    <div id="achievements-view-page" className="p-8 max-w-7xl mx-auto space-y-8">
       {/* Top Header & Mastery Banner */}
-      <div className="p-8 rounded-3xl bg-gradient-to-br from-[#181a20] via-[#14151a] to-[#101115] border border-[#22242a] relative overflow-hidden shadow-2xl space-y-6">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.48, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
+        className="p-8 rounded-3xl bg-gradient-to-br from-[#181a20] via-[#14151a] to-[#101115] border border-[#22242a] relative overflow-hidden shadow-2xl space-y-6"
+      >
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
@@ -128,10 +134,15 @@ export const AchievementsView: React.FC = () => {
             />
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Category Tabs */}
-      <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#14151a] border border-[#22242a] w-full sm:w-auto overflow-x-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.48, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+        className="flex items-center gap-1.5 p-1 rounded-xl bg-[#14151a] border border-[#22242a] w-full sm:w-auto overflow-x-auto"
+      >
         {[
           { id: 'all', label: 'All Milestones' },
           { id: 'session', label: 'Sessions' },
@@ -151,10 +162,15 @@ export const AchievementsView: React.FC = () => {
             {cat.label}
           </button>
         ))}
-      </div>
+      </motion.div>
 
       {/* Grid of Achievements */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.48, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+      >
         {filteredAchievements.map(ach => {
           const Icon = ICON_MAP[ach.icon] || Award;
           const progressDisplay = getProgressDisplay(ach);
@@ -228,7 +244,7 @@ export const AchievementsView: React.FC = () => {
             </div>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 };

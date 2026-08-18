@@ -61,9 +61,9 @@ export const ProfileView: React.FC = () => {
     <div id="profile-view-page" className="p-8 max-w-5xl mx-auto space-y-8">
       {/* 1. Profile Hero Card */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
         className="relative rounded-3xl bg-[#14151a] border border-[#22242a] p-6 sm:p-8 overflow-hidden shadow-lg shadow-black/20"
       >
         {/* Glow ambient background */}
@@ -125,9 +125,9 @@ export const ProfileView: React.FC = () => {
 
       {/* 2. Practice Goals Section */}
       <motion.section
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
         className="p-6 sm:p-8 rounded-3xl bg-[#14151a] border border-[#22242a] space-y-4 shadow-lg shadow-black/10"
       >
         <div className="flex items-center justify-between pb-3 border-b border-[#22242a]">
@@ -160,9 +160,9 @@ export const ProfileView: React.FC = () => {
 
       {/* 3. Studio Lifetime Statistics Grid */}
       <motion.section
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
         className="space-y-4"
       >
         <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-400 px-1">
@@ -240,9 +240,9 @@ export const ProfileView: React.FC = () => {
 
       {/* 4. Supabase Cloud Database & Storage Sync */}
       <motion.section
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
         className="p-6 sm:p-8 rounded-3xl bg-[#14151a] border border-[#22242a] space-y-5"
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#22242a]">
@@ -335,9 +335,9 @@ export const ProfileView: React.FC = () => {
 
       {/* 5. Studio Data & Local Workspace Info */}
       <motion.section
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.48, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         className="p-6 rounded-3xl bg-[#14151a] border border-[#22242a] space-y-4"
       >
         <div className="flex items-center justify-between pb-3 border-b border-[#22242a]">
