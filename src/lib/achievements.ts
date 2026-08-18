@@ -155,7 +155,7 @@ export function evaluateAchievements(
   currentAchievements: Achievement[],
   data: EvaluationInput
 ): { updatedAchievements: Achievement[]; newlyUnlocked: Achievement[] } {
-  const completedSessions = data.sessions.filter(s => s.status === 'completed');
+  const completedSessions = data.sessions.filter(s => s.status === 'completed' || s.status === 'expired');
   const sessionCount = completedSessions.length;
   const totalDrawingTime = data.totalDrawingTimeMs;
   const artworkCount = data.artworks.length;

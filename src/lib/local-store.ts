@@ -1,8 +1,9 @@
-import { Session, Challenge, Artwork, Insight, Achievement } from '../types';
+import { Session, Challenge, Artwork, Insight, Achievement, UserProfile } from '../types';
 import { INITIAL_CHALLENGES } from './seed-data';
 import { INITIAL_ACHIEVEMENTS } from './achievements';
 
 const STORAGE_KEYS = {
+  USER_PROFILE: 'artprogress.user_profile.v1',
   SESSIONS: 'artprogress.sessions.v1',
   ACTIVE_SESSION: 'artprogress.active_session.v1',
   CHALLENGES: 'artprogress.challenges.v1',
@@ -29,6 +30,28 @@ function safeSetItem<T>(key: string, value: T): void {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (err) {
     console.error(`Failed to write to localStorage key "${key}":`, err);
+  }
+}
+
+// ---------------- User Profile ----------------
+export function loadStoredUserProfile(): UserProfile | null {
+  const profile = safeGetItem<UserProfile | null>(STORAGE_KEYS.USER_PROFILE, null);
+  if (!profile || !profile.name || typeof profile.name !== 'string' || !profile.name.trim()) {
+    return null;
+  }
+  return {
+    ...profile,
+    name: profile.name.trim(),
+    drawingExperience: profile.drawingExperience || '3–5 years',
+    goals: Array.isArray(profile.goals) ? profile.goals : []
+  };
+}
+
+export function saveStoredUserProfile(profile: UserProfile | null): void {
+  if (profile) {
+    safeSetItem(STORAGE_KEYS.USER_PROFILE, profile);
+  } else {
+    localStorage.removeItem(STORAGE_KEYS.USER_PROFILE);
   }
 }
 

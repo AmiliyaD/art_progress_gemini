@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { motion } from 'motion/react';
 import { Palette, Plus, Search, Filter, Sparkles, SlidersHorizontal } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Artwork } from '../../types';
@@ -61,9 +62,14 @@ export const ArtworkView: React.FC = () => {
   };
 
   return (
-    <div id="artwork-view-page" className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-200">
+    <div id="artwork-view-page" className="p-8 max-w-7xl mx-auto space-y-8">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#22242a]">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#22242a]"
+      >
         <div>
           <h2 className="text-xl font-bold text-zinc-100 flex items-center gap-2">
             <span>Artwork Archive</span>
@@ -76,19 +82,27 @@ export const ArtworkView: React.FC = () => {
           </p>
         </div>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.02, y: -1 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ duration: 0.15 }}
           id="add-artwork-btn"
           onClick={handleStartAdd}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-black font-bold text-xs transition-all shadow-md shadow-amber-500/10 cursor-pointer self-start sm:self-auto"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs transition-colors shadow-md shadow-amber-500/10 cursor-pointer self-start sm:self-auto select-none"
         >
           <Plus className="w-4 h-4 stroke-[2.5]" />
           <span>+ Add Artwork</span>
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
       {/* Search & Topic Filters */}
       {artworks.length > 0 && (
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col md:flex-row items-center justify-between gap-4"
+        >
           {/* Topic Filters */}
           <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 w-full md:w-auto">
             <button
@@ -127,7 +141,7 @@ export const ArtworkView: React.FC = () => {
               className="w-full pl-8 pr-3 py-2 rounded-xl bg-[#14151a] border border-[#262832] text-xs text-zinc-200 placeholder-zinc-400 focus:border-amber-500 focus:outline-none"
             />
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Grid of Artworks */}
@@ -144,7 +158,12 @@ export const ArtworkView: React.FC = () => {
           No artworks match your search query or topic filter.
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+        >
           {filteredArtworks.map(artwork => (
             <ArtworkCard
               key={artwork.id}
@@ -157,7 +176,7 @@ export const ArtworkView: React.FC = () => {
               onDelete={() => setArtworkToDelete(artwork)}
             />
           ))}
-        </div>
+        </motion.div>
       )}
 
       {/* Create / Edit Artwork Modal */}

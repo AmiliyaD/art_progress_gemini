@@ -1,10 +1,15 @@
-export type SessionStatus = 'active' | 'paused' | 'completed';
+export type SessionStatus = 'active' | 'paused' | 'completed' | 'expired';
+
+export type SessionType = 'free' | 'timed';
 
 export interface Session {
   id: string;
   title?: string;
   topics: string[];
   goal?: string;
+  sessionType?: SessionType; // 'free' | 'timed' (default: 'free')
+  timeLimit?: number; // Total duration limit in ms for timed sessions (e.g. 1800000 ms)
+  expiresAt?: number; // Hard expiration timestamp in ms for timed sessions
   status: SessionStatus;
   startedAt: number; // Unix timestamp ms
   pausedAt?: number; // Unix timestamp ms
@@ -45,7 +50,8 @@ export interface Artwork {
   id: string;
   title: string;
   description?: string;
-  imageId: string; // IndexedDB key or Data URL fallback
+  imageId: string; // IndexedDB key, signed URL or Data URL fallback
+  storagePath?: string; // Supabase Storage relative path in private artworks bucket: {user_id}/{filename}
   topics: string[];
   durationMs: number; // drawing time in milliseconds
   date: string; // YYYY-MM-DD
@@ -90,7 +96,19 @@ export type NavigationTab =
   | 'artwork'
   | 'insights'
   | 'achievements'
-  | 'topics';
+  | 'topics'
+  | 'profile';
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  drawingExperience: string;
+  customExperience?: string;
+  goals: string[];
+  customGoals?: string[];
+  createdAt: number;
+  updatedAt: number;
+}
 
 export interface TopicStat {
   topic: string;

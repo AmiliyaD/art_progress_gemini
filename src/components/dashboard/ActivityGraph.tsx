@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Activity, Clock, Calendar, Sparkles } from 'lucide-react';
 import { Session } from '../../types';
-import { formatDuration, formatShortDuration } from '../../lib/time-utils';
+import { formatDuration, formatShortDuration, isSessionFinished } from '../../lib/time-utils';
 
 interface ActivityGraphProps {
   sessions: Session[];
@@ -9,7 +9,7 @@ interface ActivityGraphProps {
 
 export const ActivityGraph: React.FC<ActivityGraphProps> = ({ sessions }) => {
   const completedSessions = useMemo(() => {
-    return sessions.filter(s => s.status === 'completed' && s.completedAt);
+    return sessions.filter(s => isSessionFinished(s.status) && s.completedAt);
   }, [sessions]);
 
   // Aggregate drawing time by date for the last 14 days

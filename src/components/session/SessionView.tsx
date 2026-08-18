@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
+import { motion } from 'motion/react';
 import {
   PlayCircle,
   Plus,
   Clock,
+  Timer,
   Calendar,
   Layers,
   Palette,
@@ -16,11 +18,12 @@ import { useApp } from '../../context/AppContext';
 import { ActiveSessionCard } from './ActiveSessionCard';
 import { EmptyState } from '../common/EmptyState';
 import { ConfirmModal } from '../common/ConfirmModal';
-import { formatDuration, formatShortDuration, formatDateTime } from '../../lib/time-utils';
+import { formatDuration, formatShortDuration, formatDateTime, isSessionFinished } from '../../lib/time-utils';
 
 export const SessionView: React.FC = () => {
   const {
     activeSession,
+    selectedSessionId,
     sessions,
     artworks,
     setIsNewSessionModalOpen,
@@ -39,9 +42,9 @@ export const SessionView: React.FC = () => {
     return Array.from(set);
   }, [sessions]);
 
-  // Completed sessions list
+  // Completed sessions list (completed or expired)
   const completedSessions = useMemo(() => {
-    return sessions.filter(s => s.status === 'completed');
+    return sessions.filter(s => isSessionFinished(s.status));
   }, [sessions]);
 
   // Filtered sessions
@@ -66,16 +69,24 @@ export const SessionView: React.FC = () => {
   };
 
   return (
-    <div id="session-view-page" className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-200">
+    <div id="session-view-page" className="p-8 max-w-7xl mx-auto space-y-8">
       {/* Top Banner / Active Session or Start New Session Prompt */}
       {activeSession ? (
-        <section id="active-session-section">
+        <motion.section
+          id="active-session-section"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+        >
           <ActiveSessionCard />
-        </section>
+        </motion.section>
       ) : (
-        <section
+        <motion.section
           id="no-active-session-banner"
-          className="p-8 rounded-2xl bg-[#14151a] border border-[#22242a] flex flex-col md:flex-row items-center justify-between gap-6"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          className="p-8 rounded-2xl bg-[#14151a] hover:border-zinc-700/60 border border-[#22242a] flex flex-col md:flex-row items-center justify-between gap-6 transition-colors shadow-lg shadow-black/20"
         >
           <div className="space-y-1 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2 text-zinc-400 text-xs font-semibold uppercase tracking-wider">
@@ -88,19 +99,28 @@ export const SessionView: React.FC = () => {
             </p>
           </div>
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02, y: -1 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.15 }}
             id="session-view-start-btn"
             onClick={() => setIsNewSessionModalOpen(true)}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-black font-bold text-sm transition-all shadow-lg shadow-amber-500/15 cursor-pointer shrink-0"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm transition-colors shadow-lg shadow-amber-500/15 cursor-pointer shrink-0 select-none"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Start New Session</span>
-          </button>
-        </section>
+          </motion.button>
+        </motion.section>
       )}
 
       {/* Session History Header & Filters */}
-      <section id="session-history-section" className="space-y-4">
+      <motion.section
+        id="session-history-section"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.28, delay: 0.06, ease: [0.16, 1, 0.3, 1] }}
+        className="space-y-4"
+      >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#22242a]">
           <div>
             <h3 className="text-base font-bold text-zinc-100 flex items-center gap-2">
@@ -146,13 +166,25 @@ export const SessionView: React.FC = () => {
 
         {/* Sessions List */}
         {completedSessions.length === 0 ? (
-          <EmptyState
-            icon={PlayCircle}
-            title="No sessions yet."
-            description="Start your first drawing session to begin recording your creative practice time and topics."
-            actionLabel="Start First Session"
-            onAction={() => setIsNewSessionModalOpen(true)}
-          />
+          activeSession ? (
+            <div className="p-8 text-center rounded-2xl bg-[#14151a]/60 border border-[#22242a] space-y-2">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 mx-auto flex items-center justify-center">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <h4 className="text-sm font-bold text-zinc-200">Active Session in Progress</h4>
+              <p className="text-xs text-zinc-400 max-w-sm mx-auto">
+                Your drawing session is actively recording above. When you complete your practice, full duration analytics and log history will appear here.
+              </p>
+            </div>
+          ) : (
+            <EmptyState
+              icon={PlayCircle}
+              title="No sessions yet."
+              description="Start your first drawing session to begin recording your creative practice time and topics."
+              actionLabel="Start First Session"
+              onAction={() => setIsNewSessionModalOpen(true)}
+            />
+          )
         ) : filteredSessions.length === 0 ? (
           <div className="p-8 text-center rounded-xl bg-[#14151a] border border-[#22242a] text-zinc-400 text-sm">
             No drawing sessions match your search or filter.
@@ -161,18 +193,29 @@ export const SessionView: React.FC = () => {
           <div className="grid gap-3">
             {filteredSessions.map(session => {
               const linkedArtworks = getLinkedArtworks(session.id);
+              const isSelected = selectedSessionId === session.id;
 
               return (
                 <div
                   key={session.id}
                   id={`session-row-${session.id}`}
-                  className="p-5 rounded-2xl bg-[#14151a] hover:bg-[#181a20] border border-[#22242a] transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 group"
+                  className={`p-5 rounded-2xl bg-[#14151a] hover:bg-[#181a20] border transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 group ${
+                    isSelected ? 'border-amber-500/60 ring-1 ring-amber-500/30' : 'border-[#22242a]'
+                  }`}
                 >
                   <div className="space-y-2">
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-2">
                       <h4 className="text-sm font-bold text-zinc-200">
-                        {session.title || 'Drawing Practice Session'}
+                        {session.title || (session.sessionType === 'timed' ? 'Timed Drawing Session' : 'Drawing Practice Session')}
                       </h4>
+
+                      {session.sessionType === 'timed' && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[10px] font-bold uppercase tracking-wider">
+                          <Timer className="w-3 h-3" />
+                          <span>Timed {session.timeLimit ? `(${formatShortDuration(session.timeLimit)})` : ''}</span>
+                        </span>
+                      )}
+
                       <span className="text-xs text-zinc-400 flex items-center gap-1">
                         <Calendar className="w-3 h-3 text-zinc-400" />
                         <span>{formatDateTime(session.completedAt || session.startedAt)}</span>
@@ -233,7 +276,7 @@ export const SessionView: React.FC = () => {
             })}
           </div>
         )}
-      </section>
+      </motion.section>
 
       {/* Delete Confirmation */}
       <ConfirmModal

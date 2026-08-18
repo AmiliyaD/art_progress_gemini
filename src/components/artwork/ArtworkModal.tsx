@@ -141,23 +141,30 @@ export const ArtworkModal: React.FC<ArtworkModalProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <motion.div
+          key="artwork-modal-container"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
           <motion.div
             id="artwork-modal-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md"
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md cursor-pointer"
             onClick={onClose}
           />
 
           <motion.div
             id="artwork-modal"
-            initial={{ opacity: 0, scale: 0.95, y: 12 }}
+            initial={{ opacity: 0, scale: 0.96, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 12 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            exit={{ opacity: 0, scale: 0.96, y: 12 }}
+            transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
             className="relative z-10 w-full max-w-2xl bg-[#181a1f] border border-[#2c2f38] rounded-2xl p-6 shadow-2xl flex flex-col max-h-[90vh] overflow-y-auto"
           >
             {/* Header */}
@@ -339,7 +346,7 @@ export const ArtworkModal: React.FC<ArtworkModalProps> = ({
               </div>
             </form>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

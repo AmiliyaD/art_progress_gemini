@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { motion } from 'motion/react';
 import { Layers, Clock, PlayCircle, Palette, Search, Plus, Calendar, Sparkles } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { formatShortDuration, formatDate } from '../../lib/time-utils';
@@ -13,9 +14,14 @@ export const TopicsView: React.FC = () => {
   }, [topicStats, searchQuery]);
 
   return (
-    <div id="topics-view-page" className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-200">
+    <div id="topics-view-page" className="p-8 max-w-7xl mx-auto space-y-8">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#22242a]">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#22242a]"
+      >
         <div>
           <h2 className="text-xl font-bold text-zinc-100 flex items-center gap-2">
             <span>Practice Topics & Disciplines</span>
@@ -28,18 +34,26 @@ export const TopicsView: React.FC = () => {
           </p>
         </div>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.02, y: -1 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ duration: 0.15 }}
           onClick={() => setIsNewSessionModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-black font-bold text-xs transition-all shadow-md shadow-amber-500/10 cursor-pointer self-start sm:self-auto"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs transition-colors shadow-md shadow-amber-500/10 cursor-pointer self-start sm:self-auto select-none"
         >
           <Plus className="w-4 h-4 stroke-[2.5]" />
           <span>Practice Topic</span>
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
       {/* Search */}
       {topicStats.length > 0 && (
-        <div className="flex items-center justify-between gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+          className="flex items-center justify-between gap-4"
+        >
           <div className="relative w-full sm:w-72">
             <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
             <input
@@ -50,7 +64,7 @@ export const TopicsView: React.FC = () => {
               className="w-full pl-8 pr-3 py-2 rounded-xl bg-[#14151a] border border-[#262832] text-xs text-zinc-200 placeholder-zinc-400 focus:border-amber-500 focus:outline-none"
             />
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Topics Grid */}
@@ -67,12 +81,19 @@ export const TopicsView: React.FC = () => {
           No topics match your search query.
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+        >
           {filteredTopics.map(stat => (
-            <div
+            <motion.div
               key={stat.topic}
+              whileHover={{ y: -2 }}
+              transition={{ duration: 0.18 }}
               id={`topic-stat-card-${stat.topic}`}
-              className="p-6 rounded-2xl bg-[#14151a] hover:bg-[#181a21] border border-[#22242a] hover:border-zinc-700/60 transition-all flex flex-col justify-between group shadow-lg shadow-black/15"
+              className="p-6 rounded-2xl bg-[#14151a] hover:bg-[#181a21] border border-[#22242a] hover:border-zinc-700/60 transition-colors flex flex-col justify-between group shadow-lg shadow-black/15"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -115,9 +136,9 @@ export const TopicsView: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   );

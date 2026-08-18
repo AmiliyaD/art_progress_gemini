@@ -26,18 +26,25 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <motion.div
+          key="confirm-modal-container"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        >
           <motion.div
-            id="confirm-modal-overlay"
+            key="confirm-modal-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="fixed inset-0 bg-black/75 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm cursor-pointer"
             onClick={onCancel}
           />
           <motion.div
-            id="confirm-modal-box"
+            key="confirm-modal-box"
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -52,8 +59,9 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
                 <h3 className="text-base font-bold text-zinc-100">{title}</h3>
               </div>
               <button
+                type="button"
                 onClick={onCancel}
-                className="p-1 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-[#22242a] transition-colors cursor-pointer"
+                className="p-1 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-[#22242a] focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -69,7 +77,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={onCancel}
-                className="px-4 py-2 rounded-xl text-sm font-medium text-zinc-300 hover:bg-[#22242a] transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-xl text-sm font-medium text-zinc-300 hover:bg-[#22242a] focus:outline-none focus:ring-2 focus:ring-zinc-600 transition-colors cursor-pointer"
               >
                 {cancelLabel}
               </motion.button>
@@ -78,17 +86,17 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={onConfirm}
-                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 transition-colors cursor-pointer ${
                   isDestructive
-                    ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-600/20'
-                    : 'bg-amber-500 hover:bg-amber-400 text-black shadow-md shadow-amber-500/10'
+                    ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-600/20 focus:ring-rose-500'
+                    : 'bg-amber-500 hover:bg-amber-400 text-black shadow-md shadow-amber-500/10 focus:ring-amber-500'
                 }`}
               >
                 {confirmLabel}
               </motion.button>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

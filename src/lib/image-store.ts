@@ -122,6 +122,11 @@ export async function getArtworkImageBlob(id: string): Promise<Blob | null> {
 export async function getArtworkImageUrl(id: string): Promise<string | null> {
   if (!id) return null;
 
+  // If already a remote HTTP/HTTPS URL or data URL, return directly
+  if (id.startsWith('http://') || id.startsWith('https://') || id.startsWith('data:')) {
+    return id;
+  }
+
   // Check cache first
   if (objectUrlCache.has(id)) {
     return objectUrlCache.get(id)!;

@@ -37,6 +37,31 @@ export const ACCENT_COLORS = [
   { name: 'Cyan Azure', hex: '#06b6d4', bgClass: 'bg-cyan-500', textClass: 'text-cyan-400', borderClass: 'border-cyan-500' }
 ];
 
+export const EXPERIENCE_OPTIONS = [
+  'Less than 1 year',
+  '1–2 years',
+  '3–5 years',
+  '5–10 years',
+  '10+ years'
+] as const;
+
+export const SUGGESTED_GOALS = [
+  'Improve anatomy',
+  'Improve perspective',
+  'Improve portraits',
+  'Improve hands',
+  'Improve coloring',
+  'Improve lighting',
+  'Improve composition',
+  'Develop character design',
+  'Build a portfolio',
+  'Draw more consistently',
+  'Develop my own style',
+  'Become a professional artist',
+  'Prepare for art school',
+  'Simply enjoy drawing more'
+];
+
 export const SUGGESTED_TAGS = [
   'Anatomy',
   'Hands',

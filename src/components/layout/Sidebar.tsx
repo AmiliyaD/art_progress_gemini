@@ -10,7 +10,10 @@ import {
   Sparkles,
   Layers,
   Pause,
-  Plus
+  Plus,
+  User,
+  Cloud,
+  ShieldCheck
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { NavigationTab } from '../../types';
@@ -18,12 +21,15 @@ import { formatDuration } from '../../lib/time-utils';
 
 export const Sidebar: React.FC = () => {
   const {
+    userProfile,
     currentTab,
     navigateTo,
     activeSession,
     currentElapsedMs,
     setIsNewSessionModalOpen,
-    drawingStreak
+    drawingStreak,
+    authUser,
+    setIsAuthModalOpen
   } = useApp();
 
   const navItems: { id: NavigationTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -33,7 +39,8 @@ export const Sidebar: React.FC = () => {
     { id: 'artwork', label: 'Artwork Archive', icon: Palette },
     { id: 'insights', label: 'Insights & Journal', icon: BookOpen },
     { id: 'achievements', label: 'Achievements', icon: Award },
-    { id: 'topics', label: 'Practice Topics', icon: Layers }
+    { id: 'topics', label: 'Practice Topics', icon: Layers },
+    { id: 'profile', label: 'Studio Profile', icon: User }
   ];
 
   return (
@@ -117,20 +124,20 @@ export const Sidebar: React.FC = () => {
               onClick={() => navigateTo(item.id)}
               whileHover={{ x: 3 }}
               whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.15 }}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer text-left relative ${
+              transition={{ type: "spring", stiffness: 450, damping: 28 }}
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer text-left relative select-none ${
                 isActive
-                  ? 'bg-amber-500/10 text-amber-400 font-semibold border border-amber-500/20 shadow-sm'
+                  ? 'bg-amber-500/10 text-amber-400 font-semibold border border-amber-500/25 shadow-sm'
                   : 'text-zinc-400 hover:text-zinc-200 hover:bg-[#181a1f] border border-transparent'
               }`}
             >
-              <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-amber-400' : 'text-zinc-500'}`} />
-              <span className="flex-1">{item.label}</span>
+              <Icon className={`w-4 h-4 shrink-0 transition-colors duration-200 ${isActive ? 'text-amber-400' : 'text-zinc-500'}`} />
+              <span className="flex-1 transition-colors duration-200">{item.label}</span>
               {isActive && (
                 <motion.div
                   layoutId="activeTabIndicator"
-                  className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/60"
+                  transition={{ type: "spring", stiffness: 380, damping: 26, mass: 0.6 }}
                 />
               )}
             </motion.button>
@@ -177,9 +184,48 @@ export const Sidebar: React.FC = () => {
           </div>
         )}
 
-        <div className="text-[11px] text-zinc-400 text-center font-medium">
-          Local-First Creative Storage
-        </div>
+        {/* User Profile Footer Card */}
+        {userProfile && (
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => navigateTo('profile')}
+            id="sidebar-user-profile-btn"
+            className="p-2.5 rounded-xl bg-[#181a1f] hover:bg-[#20232a] border border-[#27272a] hover:border-amber-500/30 transition-all cursor-pointer flex items-center gap-3 group"
+          >
+            <div className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xs shrink-0 group-hover:bg-amber-500 group-hover:text-black transition-colors">
+              {userProfile.name ? userProfile.name.charAt(0).toUpperCase() : 'A'}
+            </div>
+            <div className="flex-1 min-w-0 text-left">
+              <div className="text-xs font-bold text-zinc-200 group-hover:text-amber-300 truncate transition-colors">
+                {userProfile.name}
+              </div>
+              <div className="text-[10px] text-zinc-400 truncate">
+                {userProfile.customExperience || userProfile.drawingExperience}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {authUser ? (
+          <button
+            onClick={() => navigateTo('profile')}
+            className="w-full py-1.5 px-2.5 rounded-lg bg-emerald-500/5 hover:bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            title="Connected to Supabase PostgreSQL & Storage"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="font-mono">Supabase Connected</span>
+          </button>
+        ) : (
+          <button
+            onClick={() => setIsAuthModalOpen(true)}
+            className="w-full py-1.5 px-2.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-400 text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            title="Sign in to sync your drawings to Supabase"
+          >
+            <Cloud className="w-3.5 h-3.5 text-amber-400" />
+            <span>Connect Cloud Studio</span>
+          </button>
+        )}
       </div>
     </aside>
   );

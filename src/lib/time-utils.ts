@@ -1,4 +1,11 @@
-import { Session } from '../types';
+import { Session, SessionStatus } from '../types';
+
+/**
+ * Check if a session has ended (either completed or expired).
+ */
+export function isSessionFinished(status: SessionStatus): boolean {
+  return status === 'completed' || status === 'expired';
+}
 
 /**
  * Calculates accurate elapsed active drawing duration for a session using timestamps.
@@ -7,8 +14,14 @@ import { Session } from '../types';
 export function getElapsedSessionTime(session: Session | null, now: number = Date.now()): number {
   if (!session) return 0;
 
-  if (session.status === 'completed') {
+  if (session.status === 'completed' || session.status === 'expired') {
     return session.duration || 0;
+  }
+
+  if (session.sessionType === 'timed' && session.timeLimit) {
+    // For timed sessions, elapsed time is capped at timeLimit
+    const elapsed = Math.max(0, now - session.startedAt);
+    return Math.min(elapsed, session.timeLimit);
   }
 
   if (session.status === 'paused') {
@@ -19,6 +32,22 @@ export function getElapsedSessionTime(session: Session | null, now: number = Dat
 
   // Active state: elapsed time from startedAt to now, minus all paused durations
   return Math.max(0, now - session.startedAt - (session.totalPausedDuration || 0));
+}
+
+/**
+ * Calculates accurate remaining milliseconds for a timed session.
+ * Uses expiresAt timestamp to guarantee zero drift.
+ */
+export function getRemainingSessionTime(session: Session | null, now: number = Date.now()): number {
+  if (!session || session.sessionType !== 'timed') return 0;
+  if (session.status === 'expired') return 0;
+  if (session.status === 'completed') {
+    const limit = session.timeLimit || 0;
+    return Math.max(0, limit - (session.duration || 0));
+  }
+
+  const expiresAt = session.expiresAt || (session.startedAt + (session.timeLimit || 0));
+  return Math.max(0, expiresAt - now);
 }
 
 /**
@@ -74,6 +103,25 @@ export function formatLongDuration(ms: number): string {
 }
 
 /**
+ * Get personalized time-based greeting for the user's local time.
+ * "Good morning, {name}." (5:00 - 11:59)
+ * "Good afternoon, {name}." (12:00 - 16:59)
+ * "Good evening, {name}." (17:00 - 4:59)
+ */
+export function getTimeBasedGreeting(name: string, date: Date = new Date()): string {
+  const cleanName = name?.trim() || 'Artist';
+  const hours = date.getHours();
+
+  if (hours >= 5 && hours < 12) {
+    return `Good morning, ${cleanName}.`;
+  }
+  if (hours >= 12 && hours < 17) {
+    return `Good afternoon, ${cleanName}.`;
+  }
+  return `Good evening, ${cleanName}.`;
+}
+
+/**
  * Format timestamp or ISO string to standard date
  */
 export function formatDate(timestampOrDateStr: number | string | undefined): string {
@@ -113,7 +161,7 @@ export function calculateDrawingStreak(completedSessions: Session[]): number {
   const sessionDates = new Set<string>();
 
   for (const session of completedSessions) {
-    if (session.status === 'completed' && session.completedAt) {
+    if (isSessionFinished(session.status) && session.completedAt) {
       const date = new Date(session.completedAt);
       const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
       sessionDates.add(key);

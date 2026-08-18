@@ -1,12 +1,18 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { AchievementToast } from './components/common/AchievementToast';
 import { NewSessionModal } from './components/session/NewSessionModal';
+import { FinishSessionModal } from './components/session/FinishSessionModal';
 import { SessionCompleteModal } from './components/session/SessionCompleteModal';
 import { ArtworkModal } from './components/artwork/ArtworkModal';
+import { OnboardingFlow } from './components/onboarding/OnboardingFlow';
+import { ProfileView } from './components/profile/ProfileView';
+import { EditProfileModal } from './components/profile/EditProfileModal';
+import { AuthModal } from './components/auth/AuthModal';
+import { MigrationModal } from './components/auth/MigrationModal';
 import { DashboardView } from './components/dashboard/DashboardView';
 import { SessionView } from './components/session/SessionView';
 import { ChallengesView } from './components/challenges/ChallengesView';
@@ -21,7 +27,11 @@ const StudioMainContent: React.FC = () => {
     isArtworkModalOpen,
     setIsArtworkModalOpen,
     artworkModalPrefill,
-    setArtworkModalPrefill
+    setArtworkModalPrefill,
+    isEditProfileModalOpen,
+    setIsEditProfileModalOpen,
+    isAuthModalOpen,
+    setIsAuthModalOpen
   } = useApp();
 
   const renderActiveView = () => {
@@ -40,6 +50,8 @@ const StudioMainContent: React.FC = () => {
         return <AchievementsView />;
       case 'topics':
         return <TopicsView />;
+      case 'profile':
+        return <ProfileView />;
       default:
         return <DashboardView />;
     }
@@ -54,24 +66,25 @@ const StudioMainContent: React.FC = () => {
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         <Header />
         <main className="flex-1 pb-16 overflow-y-auto relative">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentTab}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full"
-            >
-              {renderActiveView()}
-            </motion.div>
-          </AnimatePresence>
+          <motion.div
+            key={currentTab}
+            initial={{ opacity: 0, y: 10, scale: 0.99 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{
+              duration: 0.36,
+              ease: [0.22, 1, 0.36, 1]
+            }}
+            className="w-full will-change-transform"
+          >
+            {renderActiveView()}
+          </motion.div>
         </main>
       </div>
 
       {/* Global Modals & Toast Notifications */}
       <AchievementToast />
       <NewSessionModal />
+      <FinishSessionModal />
       <SessionCompleteModal />
       <ArtworkModal
         isOpen={isArtworkModalOpen}
@@ -81,16 +94,36 @@ const StudioMainContent: React.FC = () => {
         }}
         prefill={artworkModalPrefill}
       />
+      <EditProfileModal
+        isOpen={isEditProfileModalOpen}
+        onClose={() => setIsEditProfileModalOpen(false)}
+      />
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
+      <MigrationModal />
     </div>
   );
+};
+
+const StudioRoot: React.FC = () => {
+  const { isOnboardingComplete } = useApp();
+
+  if (!isOnboardingComplete) {
+    return <OnboardingFlow />;
+  }
+
+  return <StudioMainContent />;
 };
 
 export function App() {
   return (
     <AppProvider>
-      <StudioMainContent />
+      <StudioRoot />
     </AppProvider>
   );
 }
 
 export default App;
+
